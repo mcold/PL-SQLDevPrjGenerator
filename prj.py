@@ -10,12 +10,24 @@ file_path_start = '1,4,,,'
 prj_start = 'PL/SQL Developer Project'
 l_accept_ext = ['sql']
 
-# TODO: get groups where exists token "rollback"!
-def get_groups() -> list:
+
+def is_exists_by_token(l_str: list, token: str = None, token_without: str = None) -> bool:
+    if not token and not token_without: return True
+    for str_name in l_str:
+        if token:
+            if str_name.lower().find(token.lower()) < 0:
+                continue
+        if token_without:
+            if str_name.lower().find(token_without.lower()) > 0:
+                continue
+        return True
+    return False
+
+def get_groups(token: str = None, token_without: str = None) -> list:
     s_groups = set()
     for f in os.walk(dir):
         try:
-            s_groups.add(f[0].replace(dir, '').split('\\')[1])
+            if is_exists_by_token(f[2], token=token, token_without=token_without): s_groups.add(f[0].replace(dir, '').split('\\')[1])
         except IndexError:
             pass
     return [x for x in s_groups]
@@ -54,8 +66,10 @@ def get_order_files(l_file_path: list) -> list:
     return [file_path_start + x for x in l_file_path]
 
 def get_order_files_str(token: str = None, token_without: str = None) -> str:
-    # TODO: change to argument
     return '\n'.join(get_order_files(get_files(token = token, token_without = token_without)))
+
+def get_order_files_header_str(token: str = None, token_without: str = None) -> str:
+    return '\n'.join(['[Files]', get_order_files_str(token=token, token_without=token_without)]) 
 
 def get_files_order(l_files: list, group_name: str) -> str:
     l_num = list()
@@ -65,24 +79,24 @@ def get_files_order(l_files: list, group_name: str) -> str:
     return ','.join([str(x) for x in l_num])
 
 
-def get_order_groups(l_groups: list) -> list:
-    l_files = get_files(token_without='rollback')
+def get_order_groups(l_groups: list, token: str = None, token_without: str = None) -> list:
+    l_files = get_files(token=token, token_without=token_without)
     l_gr_str = list()
     l_gr_str.sort()
     for gr in l_groups: l_gr_str.append(gr.upper() + '=' + get_files_order(l_files, gr) + ',')
     return l_gr_str
 
-def get_order_groups_str():
-    l_gr_str = get_order_groups(get_groups())
+def get_order_groups_str(token: str = None, token_without: str = None) -> str:
+    l_gr_str = get_order_groups(get_groups(token=token, token_without=token_without), token=token, token_without=token_without)
     l_gr_str.sort()
     return '\n'.join(l_gr_str)
 
-def get_order_groups_header_str():
-    return '\n'.join(['[Groups]', get_order_groups_str()])
+def get_order_groups_header_str(token: str = None, token_without: str = None):
+    return '\n'.join(['[Groups]', get_order_groups_str(token=token, token_without=token_without)])
 
 
 def get_prj(token: str = None, token_without: str = None) -> str:
-    return '\n\n'.join([prj_start, get_order_groups_header_str(), get_order_files_str(token=token, token_without=token_without)])
+    return '\n\n'.join([prj_start, get_order_groups_header_str(token=token, token_without=token_without), get_order_files_header_str(token=token, token_without=token_without)])
 
 
 
@@ -109,4 +123,5 @@ if __name__ == "__main__":
     # print(get_order_groups_header_str())
 
     # print(get_prj(token_without='rollback'))
-    print(get_prj(token='rollback'))
+    # print(get_prj(token='rollback'))
+    print(get_prj(token_without='rollback'))
