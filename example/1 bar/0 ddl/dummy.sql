@@ -1,0 +1,1 @@
+create table bar.dummy(id number);
