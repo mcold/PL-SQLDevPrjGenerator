@@ -1,5 +1,6 @@
 # coding: utf-8
 import typer
+from typing import Optional
 import os
 
 app = typer.Typer()
@@ -99,8 +100,52 @@ def get_prj(token: str = None, token_without: str = None) -> str:
     return '\n\n'.join([prj_start, get_order_groups_header_str(token=token, token_without=token_without), get_order_files_header_str(token=token, token_without=token_without)])
 
 
+############## Application ####################################
+## TODO: add dir argument
+@app.command(help='Full project output')
+def get_prj_output():
+    print(get_prj())
+
+## TODO: add dir argument
+@app.command(help='Project output with files containing token')
+def get_prj_output_by_token(token: str = typer.Argument(str, help="Only files with token")):
+    print(get_prj(token = token))
+
+## TODO: add dir argument
+@app.command(help='Project output without files containing token')
+def get_prj_output_without_token(token: str = typer.Argument(str, help="Only files without token")):
+    print(get_prj(token_without = token))
+
+
+## TODO: add dir argument
+@app.command(help='Generate project')
+def gen_prj_output():
+    # print(get_prj())
+    pass
+
+## TODO: add dir argument
+@app.command(help='Generate project with files containing token')
+def gen_prj_by_token(token: str = typer.Argument(str, help="Only files with token")):
+    # print(get_prj(token = token))
+    pass
+
+## TODO: add dir argument
+@app.command(help='Generate project without files containing token')
+def gen_prj_without_token(token: str = typer.Argument(str, help="Only files without token")):
+    # print(get_prj(token_without = token))
+    pass
+
+## TODO: standard project
+
+## TODO: standard rollback project
+
+# @app.command()
+# def main(name: str = typer.Argument(str, help="The name of the user to greet")):
+#     print(f"Hello {name}")
+
 
 if __name__ == "__main__":
+    app()
     # populate_dir()
     # print(get_groups())
     # print(get_files())
@@ -124,4 +169,4 @@ if __name__ == "__main__":
 
     # print(get_prj(token_without='rollback'))
     # print(get_prj(token='rollback'))
-    print(get_prj(token_without='rollback'))
+    # print(get_prj(token_without='rollback'))
