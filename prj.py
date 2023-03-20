@@ -5,7 +5,7 @@ import os
 
 app = typer.Typer()
 
-dir = "C:\\Users\\mholo\\WD\\SQL\\zmmm_04443"
+dir = ''
 sep = '\\'
 file_path_start = '1,4,,,'
 prj_start = 'PL/SQL Developer Project'
@@ -23,6 +23,16 @@ def is_exists_by_token(l_str: list, token: str = None, token_without: str = None
                 continue
         return True
     return False
+
+def get_prj_dir() -> str:
+    while True:
+        dir = input("\nEnter directory for project: \n")
+        if not os.path.exists(dir): continue
+        return dir
+
+def set_prj_dir():
+    global dir
+    dir = get_prj_dir()
 
 def get_groups(token: str = None, token_without: str = None) -> list:
     s_groups = set()
@@ -62,7 +72,6 @@ def get_files(token: str = None, token_without: str = None) -> list:
                 if is_acceptable_ext(f): l_files.append(f)
     return l_files            
 
-
 def get_order_files(l_file_path: list) -> list:
     return [file_path_start + x for x in l_file_path]
 
@@ -101,37 +110,36 @@ def get_prj(token: str = None, token_without: str = None) -> str:
 
 
 ############## Application ####################################
-## TODO: add dir argument
 @app.command(help='Full project output')
 def get_prj_output():
+    set_prj_dir()
     print(get_prj())
 
-## TODO: add dir argument
 @app.command(help='Project output with files containing token')
 def get_prj_output_by_token(token: str = typer.Argument(str, help="Only files with token")):
+    set_prj_dir()
     print(get_prj(token = token))
 
-## TODO: add dir argument
 @app.command(help='Project output without files containing token')
 def get_prj_output_without_token(token: str = typer.Argument(str, help="Only files without token")):
+    set_prj_dir()
     print(get_prj(token_without = token))
 
-
-## TODO: add dir argument
 @app.command(help='Generate project')
 def gen_prj_output():
+    set_prj_dir()
     # print(get_prj())
     pass
 
-## TODO: add dir argument
 @app.command(help='Generate project with files containing token')
 def gen_prj_by_token(token: str = typer.Argument(str, help="Only files with token")):
+    set_prj_dir()
     # print(get_prj(token = token))
     pass
 
-## TODO: add dir argument
 @app.command(help='Generate project without files containing token')
 def gen_prj_without_token(token: str = typer.Argument(str, help="Only files without token")):
+    set_prj_dir()
     # print(get_prj(token_without = token))
     pass
 
