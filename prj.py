@@ -131,34 +131,39 @@ def get_prj_output_by_token(prj_dir: str, token: str = typer.Argument(str, help=
     print(get_prj(token = token))
 
 @app.command(help='Project output without files containing token')
-def get_prj_output_without_token(prj_dir: str, token: str = typer.Argument(str, help="Only files without token")):
+def get_output_without_token(prj_dir: str, token: str = typer.Argument(str, help="Only files without token")):
     set_prj_dir(prj_dir = prj_dir)
     print(get_prj(token_without = token))
 
 @app.command(help='Generate project')
-def gen_prj_output(prj_dir: str):
+def gen_output(prj_dir: str):
     set_prj_dir(prj_dir = prj_dir)
     with open(prj_abs_file(), 'w') as f: f.write(get_prj(token_without=token))
 
 @app.command(help='Generate project with files containing token')
-def gen_prj_by_token(prj_dir: str, token: str = typer.Argument(str, help="Only files with token")):
+def gen_by_token(prj_dir: str, token: str = typer.Argument(str, help="Only files with token")):
     global token_with
     token_with = token
     set_prj_dir(prj_dir = prj_dir)
     with open(prj_abs_file_token(), 'w') as f: f.write(get_prj(token=token))
 
 @app.command(help='Generate project without files containing token')
-def gen_prj_without_token(prj_dir: str, token: str = typer.Argument(str, help="Only files without token")):
+def gen_without_token(prj_dir: str, token: str = typer.Argument(str, help="Only files without token")):
     set_prj_dir(prj_dir = prj_dir)
     with open(prj_abs_file(), 'w') as f: f.write(get_prj(token_without=token))
 
 @app.command(help='Generate typical project')
-def gen_prj_standard(prj_dir: str):
-    gen_prj_without_token(prj_dir=prj_dir, token='rollback')
+def gen_standard(prj_dir: str):
+    gen_without_token(prj_dir=prj_dir, token='rollback')
 
 @app.command(help='Generate typical project rollback')
-def gen_prj_standard_rollback(prj_dir: str):
-    gen_prj_by_token(prj_dir=prj_dir, token='rollback')
+def gen_std_rollback(prj_dir: str):
+    gen_by_token(prj_dir=prj_dir, token='rollback')
+
+@app.command(help='Generate typical projects (full + rollback)')
+def gen_def(prj_dir: str):
+    gen_without_token(prj_dir=prj_dir, token='rollback')
+    gen_by_token(prj_dir=prj_dir, token='rollback')
 
 if __name__ == "__main__":
     app()
